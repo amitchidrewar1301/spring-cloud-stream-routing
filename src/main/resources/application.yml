@@ -1,0 +1,24 @@
+logging:
+  level:
+    org.springframework: DEBUG
+spring:
+  cloud:
+    stream:
+      default-binder: kafka
+      kafka:
+        binder:
+          auto-create-topics: false
+          brokers:
+            - localhost:29092
+          header-mapper-bean-name: kafkaheaderMapperTest
+      bindings:
+        consume-in-0:
+          destination: test-kafka-topic
+          group: gdpr-orchestrator-svc
+    function:
+      definition: consume;anotherConsume
+      routing-expression: "headers.testKey.toString().equals('anotherConsume') ? 'anotherConsume': 'consume'"
+  application:
+    name: KafkaSpring
+server:
+  port: 8081
